@@ -14,8 +14,6 @@ const CNC_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/cnc/photo-${
 
 const EDU_DEMOS = [
   { title: "Дистанционная образовательная платформа", url: "https://edu-demo.example.com", description: "Онлайн-обучение, тестирование и управление учебным процессом" },
-  { title: "VR-симулятор безопасности", url: "https://vr-demo.example.com", description: "Интерактивный тренажёр в виртуальной реальности" },
-  { title: "Цифровая лаборатория", url: "https://lab-demo.example.com", description: "Инженерные эксперименты в цифровой среде" },
 ];
 
 const AGRO_DEMOS = [
