@@ -11,7 +11,7 @@ const services = [
 ];
 
 const contactInfo = [
-  { icon: MapPin, label: "Россия, Волгоградская область" },
+  { icon: MapPin, label: "Россия" },
   { icon: Phone, label: "+7 (927) 505-00-35" },
   { icon: Mail, label: "info@cybervill.ru" },
   { icon: Globe, label: "cybervill.ru" },
