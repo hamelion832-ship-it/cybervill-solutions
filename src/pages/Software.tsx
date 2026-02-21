@@ -19,7 +19,6 @@ const EDU_DEMOS = [
 const AGRO_DEMOS = [
   { title: "Мониторинг сельхозугодий", url: "https://agro-monitor.example.com", description: "Спутниковый и наземный контроль полей" },
   { title: "Анализ почв и урожайности", url: "https://agro-analytics.example.com", description: "Аналитика данных для оптимизации урожая" },
-  { title: "Управление водными ресурсами", url: "https://water-mgmt.example.com", description: "Контроль ирригации и водоснабжения" },
 ];
 
 const TRANSPORT_DEMOS = [
