@@ -14,6 +14,9 @@ const PAYMENT_SLIDES = Array.from({ length: 12 }, (_, i) => `/materials/payment/
 
 const CNC_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/cnc/photo-${i + 1}.jpg`);
 const EDU_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/education/photo-${i + 1}.jpg`);
+const MONITOR_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/monitoring/photo-${i + 1}.jpg`);
+const AGRO_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/agro/photo-${i + 1}.jpg`);
+const TRANSPORT_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/transport/photo-${i + 1}.jpg`);
 
 const EDU_DEMOS = [
   { title: "Дистанционная образовательная платформа", url: "https://edu-demo.example.com", description: "Онлайн-обучение, тестирование и управление учебным процессом" },
@@ -21,7 +24,25 @@ const EDU_DEMOS = [
   { title: "Цифровая лаборатория", url: "https://lab-demo.example.com", description: "Инженерные эксперименты в цифровой среде" },
 ];
 
-type ModalType = "payment" | "cnc" | "education" | null;
+const MONITOR_DEMOS = [
+  { title: "Мониторинг инфраструктуры", url: "https://infra-monitor.example.com", description: "Контроль состояния объектов в реальном времени" },
+  { title: "Экологический мониторинг", url: "https://eco-monitor.example.com", description: "Наблюдение за экологическими показателями территорий" },
+  { title: "IoT-платформа", url: "https://iot-platform.example.com", description: "Управление сенсорными сетями и устройствами" },
+];
+
+const AGRO_DEMOS = [
+  { title: "Мониторинг сельхозугодий", url: "https://agro-monitor.example.com", description: "Спутниковый и наземный контроль полей" },
+  { title: "Анализ почв и урожайности", url: "https://agro-analytics.example.com", description: "Аналитика данных для оптимизации урожая" },
+  { title: "Управление водными ресурсами", url: "https://water-mgmt.example.com", description: "Контроль ирригации и водоснабжения" },
+];
+
+const TRANSPORT_DEMOS = [
+  { title: "Мониторинг транспорта", url: "https://transport-monitor.example.com", description: "Отслеживание транспорта и техники в реальном времени" },
+  { title: "Управление автопарком", url: "https://fleet-mgmt.example.com", description: "Контроль состояния и обслуживания техники" },
+  { title: "Аналитика перевозок", url: "https://logistics-analytics.example.com", description: "Оптимизация маршрутов и анализ эффективности" },
+];
+
+type ModalType = "payment" | "cnc" | "education" | "monitoring" | "agro" | "transport" | null;
 
 const categories = [
   {
@@ -34,16 +55,19 @@ const categories = [
     icon: Monitor,
     title: "Системы мониторинга",
     items: ["Мониторинг инфраструктуры", "Контроль инженерных систем", "Экологический мониторинг", "IoT и сенсорные сети"],
+    modal: "monitoring" as ModalType,
   },
   {
     icon: Tractor,
     title: "AgroTech",
     items: ["Мониторинг сельхозугодий", "Контроль техники и ресурсов", "Анализ почв и урожайности", "Управление водными ресурсами"],
+    modal: "agro" as ModalType,
   },
   {
     icon: Truck,
     title: "Транспорт и логистика",
     items: ["Мониторинг транспорта", "Контроль маршрутов", "Управление автопарком", "Аналитика перевозок"],
+    modal: "transport" as ModalType,
   },
   {
     icon: GraduationCap,
@@ -203,6 +227,108 @@ const Software = () => {
               <p className="text-xs text-muted-foreground mt-3">
                 Замените URL в коде на реальные адреса демонстрационных версий.
               </p>
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
+
+      {/* Системы мониторинга */}
+      <Dialog open={activeModal === "monitoring"} onOpenChange={(v) => !v && setActiveModal(null)}>
+        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="p-6 pb-2">
+            <DialogTitle className="text-xl">Системы мониторинга</DialogTitle>
+            <DialogDescription>Фотоматериалы и демонстрационные версии платформ мониторинга</DialogDescription>
+          </DialogHeader>
+          <Tabs defaultValue="photos" className="px-6 pb-6">
+            <TabsList className="mb-4">
+              <TabsTrigger value="photos">Фотографии</TabsTrigger>
+              <TabsTrigger value="demos">Демо-версии</TabsTrigger>
+            </TabsList>
+            <TabsContent value="photos">
+              <ImageGallery images={MONITOR_PHOTOS} slide={slide} setSlide={setSlide} />
+              <p className="text-xs text-muted-foreground mt-3">Разместите фотографии в папке <code>/materials/monitoring/</code> на сервере.</p>
+            </TabsContent>
+            <TabsContent value="demos">
+              <div className="space-y-3">
+                {MONITOR_DEMOS.map((demo) => (
+                  <a key={demo.title} href={demo.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between gap-4 p-4 rounded-lg border border-border bg-card hover:bg-accent/10 transition-colors group">
+                    <div>
+                      <h4 className="font-medium text-foreground group-hover:text-accent transition-colors">{demo.title}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">{demo.description}</p>
+                    </div>
+                    <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-accent shrink-0" />
+                  </a>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">Замените URL на реальные адреса демо-версий.</p>
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
+
+      {/* AgroTech */}
+      <Dialog open={activeModal === "agro"} onOpenChange={(v) => !v && setActiveModal(null)}>
+        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="p-6 pb-2">
+            <DialogTitle className="text-xl">AgroTech</DialogTitle>
+            <DialogDescription>Фотоматериалы и демонстрационные версии агротехнологических решений</DialogDescription>
+          </DialogHeader>
+          <Tabs defaultValue="photos" className="px-6 pb-6">
+            <TabsList className="mb-4">
+              <TabsTrigger value="photos">Фотографии</TabsTrigger>
+              <TabsTrigger value="demos">Демо-версии</TabsTrigger>
+            </TabsList>
+            <TabsContent value="photos">
+              <ImageGallery images={AGRO_PHOTOS} slide={slide} setSlide={setSlide} />
+              <p className="text-xs text-muted-foreground mt-3">Разместите фотографии в папке <code>/materials/agro/</code> на сервере.</p>
+            </TabsContent>
+            <TabsContent value="demos">
+              <div className="space-y-3">
+                {AGRO_DEMOS.map((demo) => (
+                  <a key={demo.title} href={demo.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between gap-4 p-4 rounded-lg border border-border bg-card hover:bg-accent/10 transition-colors group">
+                    <div>
+                      <h4 className="font-medium text-foreground group-hover:text-accent transition-colors">{demo.title}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">{demo.description}</p>
+                    </div>
+                    <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-accent shrink-0" />
+                  </a>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">Замените URL на реальные адреса демо-версий.</p>
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
+
+      {/* Транспорт и логистика */}
+      <Dialog open={activeModal === "transport"} onOpenChange={(v) => !v && setActiveModal(null)}>
+        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="p-6 pb-2">
+            <DialogTitle className="text-xl">Транспорт и логистика</DialogTitle>
+            <DialogDescription>Фотоматериалы и демонстрационные версии транспортных решений</DialogDescription>
+          </DialogHeader>
+          <Tabs defaultValue="photos" className="px-6 pb-6">
+            <TabsList className="mb-4">
+              <TabsTrigger value="photos">Фотографии</TabsTrigger>
+              <TabsTrigger value="demos">Демо-версии</TabsTrigger>
+            </TabsList>
+            <TabsContent value="photos">
+              <ImageGallery images={TRANSPORT_PHOTOS} slide={slide} setSlide={setSlide} />
+              <p className="text-xs text-muted-foreground mt-3">Разместите фотографии в папке <code>/materials/transport/</code> на сервере.</p>
+            </TabsContent>
+            <TabsContent value="demos">
+              <div className="space-y-3">
+                {TRANSPORT_DEMOS.map((demo) => (
+                  <a key={demo.title} href={demo.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between gap-4 p-4 rounded-lg border border-border bg-card hover:bg-accent/10 transition-colors group">
+                    <div>
+                      <h4 className="font-medium text-foreground group-hover:text-accent transition-colors">{demo.title}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">{demo.description}</p>
+                    </div>
+                    <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-accent shrink-0" />
+                  </a>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">Замените URL на реальные адреса демо-версий.</p>
             </TabsContent>
           </Tabs>
         </DialogContent>
