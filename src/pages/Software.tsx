@@ -1,24 +1,21 @@
 import { useState } from "react";
 import {
-  CreditCard, Tractor, Truck, GraduationCap, Cog, Monitor, ExternalLink
+  CreditCard, Tractor, Truck, GraduationCap, Cog, Monitor, ExternalLink, ChevronLeft, ChevronRight
 } from "lucide-react";
 import Section from "@/components/Section";
 import InfoCard from "@/components/InfoCard";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const CNC_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/cnc/photo-${i + 1}.jpg`);
 
 const EDU_DEMOS = [
   { title: "Дистанционная образовательная платформа", url: "https://edu-demo.example.com", description: "Онлайн-обучение, тестирование и управление учебным процессом" },
   { title: "VR-симулятор безопасности", url: "https://vr-demo.example.com", description: "Интерактивный тренажёр в виртуальной реальности" },
   { title: "Цифровая лаборатория", url: "https://lab-demo.example.com", description: "Инженерные эксперименты в цифровой среде" },
-];
-
-const MONITOR_DEMOS = [
-  { title: "Мониторинг инфраструктуры", url: "https://infra-monitor.example.com", description: "Контроль состояния объектов в реальном времени" },
-  { title: "Экологический мониторинг", url: "https://eco-monitor.example.com", description: "Наблюдение за экологическими показателями территорий" },
-  { title: "IoT-платформа", url: "https://iot-platform.example.com", description: "Управление сенсорными сетями и устройствами" },
 ];
 
 const AGRO_DEMOS = [
@@ -29,19 +26,15 @@ const AGRO_DEMOS = [
 
 const TRANSPORT_DEMOS = [
   { title: "Мониторинг транспорта", url: "https://transport-monitor.example.com", description: "Отслеживание транспорта и техники в реальном времени" },
-  { title: "Управление автопарком", url: "https://fleet-mgmt.example.com", description: "Контроль состояния и обслуживания техники" },
-  { title: "Аналитика перевозок", url: "https://logistics-analytics.example.com", description: "Оптимизация маршрутов и анализ эффективности" },
 ];
 
 type ModalType = "payment" | "cnc" | "education" | "monitoring" | "agro" | "transport" | null;
 
-const PDF_PATHS: Record<Exclude<ModalType, null>, string> = {
+const PDF_PATHS: Partial<Record<Exclude<ModalType, null>, string>> = {
   payment: "/materials/payment/presentation.pdf",
-  cnc: "/materials/cnc/presentation.pdf",
   education: "/materials/education/presentation.pdf",
   monitoring: "/materials/monitoring/presentation.pdf",
   agro: "/materials/agro/presentation.pdf",
-  transport: "/materials/transport/presentation.pdf",
 };
 
 const MODAL_INFO: Record<Exclude<ModalType, null>, { title: string; description: string }> = {
@@ -92,6 +85,30 @@ const categories = [
   },
 ];
 
+const ImageGallery = ({ images, slide, setSlide }: { images: string[]; slide: number; setSlide: (s: number) => void }) => {
+  const prev = () => setSlide(slide > 0 ? slide - 1 : images.length - 1);
+  const next = () => setSlide(slide < images.length - 1 ? slide + 1 : 0);
+  return (
+    <div className="relative bg-muted rounded-lg overflow-hidden">
+      <img src={images[slide]} alt={`Фото ${slide + 1}`} className="w-full h-auto object-contain min-h-[300px]"
+        onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
+      <div className="absolute inset-y-0 left-0 flex items-center">
+        <Button variant="ghost" size="icon" onClick={prev} className="ml-2 bg-background/70 hover:bg-background/90 rounded-full">
+          <ChevronLeft className="w-5 h-5" />
+        </Button>
+      </div>
+      <div className="absolute inset-y-0 right-0 flex items-center">
+        <Button variant="ghost" size="icon" onClick={next} className="mr-2 bg-background/70 hover:bg-background/90 rounded-full">
+          <ChevronRight className="w-5 h-5" />
+        </Button>
+      </div>
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-background/80 text-foreground text-xs px-3 py-1 rounded-full">
+        {slide + 1} / {images.length}
+      </div>
+    </div>
+  );
+};
+
 const DemoLinks = ({ demos }: { demos: typeof EDU_DEMOS }) => (
   <div className="space-y-3">
     {demos.map((demo) => (
@@ -109,12 +126,7 @@ const DemoLinks = ({ demos }: { demos: typeof EDU_DEMOS }) => (
 
 const PdfViewer = ({ src }: { src: string }) => (
   <div className="rounded-lg overflow-hidden border border-border bg-muted">
-    <iframe
-      src={src}
-      className="w-full"
-      style={{ height: "70vh", minHeight: "400px" }}
-      title="PDF документ"
-    />
+    <iframe src={src} className="w-full" style={{ height: "70vh", minHeight: "400px" }} title="PDF документ" />
     <p className="text-xs text-muted-foreground p-3">
       Разместите PDF-файл по пути <code>{src}</code> на сервере. Если PDF не отображается, <a href={src} target="_blank" rel="noopener noreferrer" className="underline text-accent">скачайте файл</a>.
     </p>
@@ -123,9 +135,60 @@ const PdfViewer = ({ src }: { src: string }) => (
 
 const Software = () => {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
+  const [slide, setSlide] = useState(0);
+
+  const openModal = (type: ModalType) => { setActiveModal(type); setSlide(0); };
 
   const demos = activeModal ? DEMOS[activeModal] : undefined;
-  const hasTabs = !!demos;
+  const pdfPath = activeModal ? PDF_PATHS[activeModal] : undefined;
+  const isCnc = activeModal === "cnc";
+  const isTransport = activeModal === "transport";
+
+  const renderModalContent = () => {
+    if (!activeModal) return null;
+
+    // CNC: photo gallery only
+    if (isCnc) {
+      return (
+        <div className="px-6 pb-6">
+          <ImageGallery images={CNC_PHOTOS} slide={slide} setSlide={setSlide} />
+          <p className="text-xs text-muted-foreground mt-3">
+            Разместите фотографии в папке <code>/materials/cnc/</code> на сервере.
+          </p>
+        </div>
+      );
+    }
+
+    // Transport: demo links only
+    if (isTransport) {
+      return (
+        <div className="px-6 pb-6">
+          <DemoLinks demos={TRANSPORT_DEMOS} />
+        </div>
+      );
+    }
+
+    // Categories with PDF + demos tabs
+    if (pdfPath && demos) {
+      return (
+        <Tabs defaultValue="pdf" className="px-6 pb-6">
+          <TabsList className="mb-4">
+            <TabsTrigger value="pdf">Презентация</TabsTrigger>
+            <TabsTrigger value="demos">Демо-версии</TabsTrigger>
+          </TabsList>
+          <TabsContent value="pdf"><PdfViewer src={pdfPath} /></TabsContent>
+          <TabsContent value="demos"><DemoLinks demos={demos} /></TabsContent>
+        </Tabs>
+      );
+    }
+
+    // PDF only
+    if (pdfPath) {
+      return <div className="px-6 pb-6"><PdfViewer src={pdfPath} /></div>;
+    }
+
+    return null;
+  };
 
   return (
     <main className="pt-16">
@@ -133,7 +196,7 @@ const Software = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {categories.map((c, i) => (
             <InfoCard key={c.title} icon={c.icon} title={c.title} items={c.items} index={i}
-              onClick={c.modal ? () => setActiveModal(c.modal!) : undefined} />
+              onClick={c.modal ? () => openModal(c.modal!) : undefined} />
           ))}
         </div>
       </Section>
@@ -145,24 +208,7 @@ const Software = () => {
               <DialogTitle className="text-xl">{MODAL_INFO[activeModal].title}</DialogTitle>
               <DialogDescription>{MODAL_INFO[activeModal].description}</DialogDescription>
             </DialogHeader>
-            {hasTabs ? (
-              <Tabs defaultValue="pdf" className="px-6 pb-6">
-                <TabsList className="mb-4">
-                  <TabsTrigger value="pdf">Презентация</TabsTrigger>
-                  <TabsTrigger value="demos">Демо-версии</TabsTrigger>
-                </TabsList>
-                <TabsContent value="pdf">
-                  <PdfViewer src={PDF_PATHS[activeModal]} />
-                </TabsContent>
-                <TabsContent value="demos">
-                  <DemoLinks demos={demos!} />
-                </TabsContent>
-              </Tabs>
-            ) : (
-              <div className="px-6 pb-6">
-                <PdfViewer src={PDF_PATHS[activeModal]} />
-              </div>
-            )}
+            {renderModalContent()}
           </DialogContent>
         </Dialog>
       )}
