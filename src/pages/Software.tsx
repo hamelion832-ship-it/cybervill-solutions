@@ -55,7 +55,6 @@ const MODAL_INFO: Record<Exclude<ModalType, null>, { title: string; description:
 
 const DEMOS: Partial<Record<Exclude<ModalType, null>, typeof EDU_DEMOS>> = {
   education: EDU_DEMOS,
-  monitoring: MONITOR_DEMOS,
   agro: AGRO_DEMOS,
   transport: TRANSPORT_DEMOS,
 };
