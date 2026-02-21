@@ -28,8 +28,8 @@ const Footer = () => (
         <div>
           <h4 className="text-primary-foreground font-semibold mb-3 text-sm uppercase tracking-wider">Контакты</h4>
           <div className="text-sm space-y-2">
-            <p>📍 Россия, Волгоградская область</p>
-            <p>📞 +7 (XXX) XXX-XX-XX</p>
+            <p>📍 Россия</p>
+            <p>📞 +7 (927) 505-00-35</p>
             <p>✉ info@cybervill.ru</p>
           </div>
         </div>
