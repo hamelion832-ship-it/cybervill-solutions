@@ -7,15 +7,17 @@ interface InfoCardProps {
   title: string;
   items: string[];
   index?: number;
+  onClick?: () => void;
 }
 
-const InfoCard = ({ icon: Icon, title, items, index = 0 }: InfoCardProps) => (
+const InfoCard = ({ icon: Icon, title, items, index = 0, onClick }: InfoCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 24 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.4, delay: index * 0.08 }}
-    className="bg-card rounded-lg border border-border p-6 card-hover"
+    className={`bg-card rounded-lg border border-border p-6 card-hover ${onClick ? "cursor-pointer" : ""}`}
+    onClick={onClick}
   >
     <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
       <Icon className="w-5 h-5 text-accent" />
