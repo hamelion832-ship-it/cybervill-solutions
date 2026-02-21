@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  CreditCard, Eye, Tractor, Truck, GraduationCap, Cog, Monitor, ChevronLeft, ChevronRight, X, Play
+  CreditCard, Tractor, Truck, GraduationCap, Cog, Monitor, ChevronLeft, ChevronRight, Play, Image
 } from "lucide-react";
 import Section from "@/components/Section";
 import InfoCard from "@/components/InfoCard";
@@ -12,12 +12,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const PAYMENT_SLIDES = Array.from({ length: 12 }, (_, i) => `/materials/payment/slide-${i + 1}.jpg`);
 
+// Placeholder: replace count with actual number of photos on server
+const CNC_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/cnc/photo-${i + 1}.jpg`);
+
+type ModalType = "payment" | "cnc" | null;
+
 const categories = [
   {
     icon: CreditCard,
     title: "Платёжные платформы",
     items: ["Цифровые платёжные системы", "Автоматизация финансовых операций", "Интеграция с банковской инфраструктурой", "Управление транзакциями и отчётностью"],
-    hasDetails: true,
+    modal: "payment" as ModalType,
   },
   {
     icon: Monitor,
@@ -43,15 +48,49 @@ const categories = [
     icon: Cog,
     title: "Станки и цифровое производство",
     items: ["CAD/CAM интеграции", "Системы управления станками", "Автоматизация производства", "Цифровые производственные процессы"],
+    modal: "cnc" as ModalType,
   },
 ];
 
+const ImageGallery = ({ images, slide, setSlide }: { images: string[]; slide: number; setSlide: (s: number) => void }) => {
+  const prev = () => setSlide(slide > 0 ? slide - 1 : images.length - 1);
+  const next = () => setSlide(slide < images.length - 1 ? slide + 1 : 0);
+
+  return (
+    <div className="relative bg-muted rounded-lg overflow-hidden">
+      <img
+        src={images[slide]}
+        alt={`Фото ${slide + 1}`}
+        className="w-full h-auto object-contain min-h-[300px]"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = "/placeholder.svg";
+        }}
+      />
+      <div className="absolute inset-y-0 left-0 flex items-center">
+        <Button variant="ghost" size="icon" onClick={prev} className="ml-2 bg-background/70 hover:bg-background/90 rounded-full">
+          <ChevronLeft className="w-5 h-5" />
+        </Button>
+      </div>
+      <div className="absolute inset-y-0 right-0 flex items-center">
+        <Button variant="ghost" size="icon" onClick={next} className="mr-2 bg-background/70 hover:bg-background/90 rounded-full">
+          <ChevronRight className="w-5 h-5" />
+        </Button>
+      </div>
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-background/80 text-foreground text-xs px-3 py-1 rounded-full">
+        {slide + 1} / {images.length}
+      </div>
+    </div>
+  );
+};
+
 const Software = () => {
-  const [open, setOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState<ModalType>(null);
   const [slide, setSlide] = useState(0);
 
-  const prev = () => setSlide((s) => (s > 0 ? s - 1 : PAYMENT_SLIDES.length - 1));
-  const next = () => setSlide((s) => (s < PAYMENT_SLIDES.length - 1 ? s + 1 : 0));
+  const openModal = (type: ModalType) => {
+    setActiveModal(type);
+    setSlide(0);
+  };
 
   return (
     <main className="pt-16">
@@ -67,63 +106,31 @@ const Software = () => {
               title={c.title}
               items={c.items}
               index={i}
-              onClick={c.hasDetails ? () => { setOpen(true); setSlide(0); } : undefined}
+              onClick={c.modal ? () => openModal(c.modal!) : undefined}
             />
           ))}
         </div>
       </Section>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      {/* Платёжные платформы */}
+      <Dialog open={activeModal === "payment"} onOpenChange={(v) => !v && setActiveModal(null)}>
         <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0">
           <DialogHeader className="p-6 pb-2">
             <DialogTitle className="text-xl">Платёжные платформы — БриксПей</DialogTitle>
-            <DialogDescription>
-              Блокчейн-платёжная система для цифровых и фиатных операций
-            </DialogDescription>
+            <DialogDescription>Блокчейн-платёжная система для цифровых и фиатных операций</DialogDescription>
           </DialogHeader>
-
           <Tabs defaultValue="slides" className="px-6 pb-6">
             <TabsList className="mb-4">
               <TabsTrigger value="slides">Материалы</TabsTrigger>
               <TabsTrigger value="video">Видео</TabsTrigger>
             </TabsList>
-
             <TabsContent value="slides">
-              <div className="relative bg-muted rounded-lg overflow-hidden">
-                <img
-                  src={PAYMENT_SLIDES[slide]}
-                  alt={`Слайд ${slide + 1}`}
-                  className="w-full h-auto object-contain"
-                />
-                <div className="absolute inset-y-0 left-0 flex items-center">
-                  <Button variant="ghost" size="icon" onClick={prev} className="ml-2 bg-background/70 hover:bg-background/90 rounded-full">
-                    <ChevronLeft className="w-5 h-5" />
-                  </Button>
-                </div>
-                <div className="absolute inset-y-0 right-0 flex items-center">
-                  <Button variant="ghost" size="icon" onClick={next} className="mr-2 bg-background/70 hover:bg-background/90 rounded-full">
-                    <ChevronRight className="w-5 h-5" />
-                  </Button>
-                </div>
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-background/80 text-foreground text-xs px-3 py-1 rounded-full">
-                  {slide + 1} / {PAYMENT_SLIDES.length}
-                </div>
-              </div>
+              <ImageGallery images={PAYMENT_SLIDES} slide={slide} setSlide={setSlide} />
             </TabsContent>
-
             <TabsContent value="video">
-              <div className="bg-muted rounded-lg overflow-hidden aspect-video flex items-center justify-center">
-                {/* Replace src with actual video URL from your server */}
-                <video
-                  controls
-                  className="w-full h-full"
-                  poster={PAYMENT_SLIDES[0]}
-                >
+              <div className="bg-muted rounded-lg overflow-hidden aspect-video">
+                <video controls className="w-full h-full" poster={PAYMENT_SLIDES[0]}>
                   <source src="/materials/payment/video.mp4" type="video/mp4" />
-                  <div className="flex flex-col items-center gap-3 text-muted-foreground">
-                    <Play className="w-12 h-12" />
-                    <p>Видео будет доступно после размещения на сервере</p>
-                  </div>
                 </video>
               </div>
               <p className="text-xs text-muted-foreground mt-2">
@@ -131,6 +138,22 @@ const Software = () => {
               </p>
             </TabsContent>
           </Tabs>
+        </DialogContent>
+      </Dialog>
+
+      {/* Станки и цифровое производство */}
+      <Dialog open={activeModal === "cnc"} onOpenChange={(v) => !v && setActiveModal(null)}>
+        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="p-6 pb-2">
+            <DialogTitle className="text-xl">Станки и цифровое производство</DialogTitle>
+            <DialogDescription>Фотогалерея проектов модернизации и автоматизации станочного оборудования</DialogDescription>
+          </DialogHeader>
+          <div className="px-6 pb-6">
+            <ImageGallery images={CNC_PHOTOS} slide={slide} setSlide={setSlide} />
+            <p className="text-xs text-muted-foreground mt-3">
+              Разместите фотографии в папке <code>/materials/cnc/</code> на сервере с именами <code>photo-1.jpg</code>, <code>photo-2.jpg</code> и т.д.
+            </p>
+          </div>
         </DialogContent>
       </Dialog>
     </main>
