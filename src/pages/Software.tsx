@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  CreditCard, Tractor, Truck, GraduationCap, Cog, Monitor, ChevronLeft, ChevronRight, Play, Image
+  CreditCard, Tractor, Truck, GraduationCap, Cog, Monitor, ChevronLeft, ChevronRight, Play, Image, ExternalLink
 } from "lucide-react";
 import Section from "@/components/Section";
 import InfoCard from "@/components/InfoCard";
@@ -12,10 +12,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const PAYMENT_SLIDES = Array.from({ length: 12 }, (_, i) => `/materials/payment/slide-${i + 1}.jpg`);
 
-// Placeholder: replace count with actual number of photos on server
 const CNC_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/cnc/photo-${i + 1}.jpg`);
+const EDU_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/education/photo-${i + 1}.jpg`);
 
-type ModalType = "payment" | "cnc" | null;
+const EDU_DEMOS = [
+  { title: "Дистанционная образовательная платформа", url: "https://edu-demo.example.com", description: "Онлайн-обучение, тестирование и управление учебным процессом" },
+  { title: "VR-симулятор безопасности", url: "https://vr-demo.example.com", description: "Интерактивный тренажёр в виртуальной реальности" },
+  { title: "Цифровая лаборатория", url: "https://lab-demo.example.com", description: "Инженерные эксперименты в цифровой среде" },
+];
+
+type ModalType = "payment" | "cnc" | "education" | null;
 
 const categories = [
   {
@@ -43,6 +49,7 @@ const categories = [
     icon: GraduationCap,
     title: "Образование и обучение",
     items: ["Дистанционные платформы", "VR-обучение и симуляторы", "Цифровые лаборатории", "Управление учебным процессом"],
+    modal: "education" as ModalType,
   },
   {
     icon: Cog,
@@ -154,6 +161,50 @@ const Software = () => {
               Разместите фотографии в папке <code>/materials/cnc/</code> на сервере с именами <code>photo-1.jpg</code>, <code>photo-2.jpg</code> и т.д.
             </p>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Образование и обучение */}
+      <Dialog open={activeModal === "education"} onOpenChange={(v) => !v && setActiveModal(null)}>
+        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="p-6 pb-2">
+            <DialogTitle className="text-xl">Образование и обучение</DialogTitle>
+            <DialogDescription>Фотоматериалы и демонстрационные версии образовательных платформ</DialogDescription>
+          </DialogHeader>
+          <Tabs defaultValue="photos" className="px-6 pb-6">
+            <TabsList className="mb-4">
+              <TabsTrigger value="photos">Фотографии</TabsTrigger>
+              <TabsTrigger value="demos">Демо-версии</TabsTrigger>
+            </TabsList>
+            <TabsContent value="photos">
+              <ImageGallery images={EDU_PHOTOS} slide={slide} setSlide={setSlide} />
+              <p className="text-xs text-muted-foreground mt-3">
+                Разместите фотографии в папке <code>/materials/education/</code> на сервере.
+              </p>
+            </TabsContent>
+            <TabsContent value="demos">
+              <div className="space-y-3">
+                {EDU_DEMOS.map((demo) => (
+                  <a
+                    key={demo.title}
+                    href={demo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between gap-4 p-4 rounded-lg border border-border bg-card hover:bg-accent/10 transition-colors group"
+                  >
+                    <div>
+                      <h4 className="font-medium text-foreground group-hover:text-accent transition-colors">{demo.title}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">{demo.description}</p>
+                    </div>
+                    <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-accent shrink-0" />
+                  </a>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">
+                Замените URL в коде на реальные адреса демонстрационных версий.
+              </p>
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </main>
