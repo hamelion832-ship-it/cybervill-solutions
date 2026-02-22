@@ -95,55 +95,47 @@ const Index = () => {
             <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto mb-8 leading-relaxed">
               Цифровые платформы и инженерные решения для городской инфраструктуры, промышленности и образовательной среды
             </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              {["Мониторинг", "Автоматизация", "Образование", "Импортозамещение"].map((t) => (
-                <span
-                  key={t}
-                  className="px-4 py-2 rounded-full border border-accent/30 text-accent text-sm font-medium bg-accent/5 backdrop-blur-sm"
-                >
-                  {t}
+          </motion.div>
+
+          {/* Solution cards directly in hero */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="mt-12 grid md:grid-cols-3 gap-5 max-w-4xl mx-auto"
+          >
+            {[
+              {
+                title: "Преобразуй замысел в ТЗ",
+                description: "Превращаем вашу идею в детальное техническое задание с чёткими требованиями, сроками и метриками",
+                onClick: () => setSpecOpen(true),
+              },
+              {
+                title: "ИИ ассистент",
+                description: "Интеллектуальный помощник для автоматизации рутинных задач, анализа данных и поддержки принятия решений",
+                onClick: () => setAiOpen(true),
+              },
+              {
+                title: "Воплоти свою идею",
+                description: "Полный цикл реализации: от прототипа до готового продукта с сопровождением и поддержкой",
+                onClick: () => setIdeaOpen(true),
+              },
+            ].map((item, i) => (
+              <div
+                key={item.title}
+                className="bg-card/80 backdrop-blur-md rounded-lg border border-accent/20 p-5 text-left cursor-pointer card-hover group"
+                onClick={item.onClick}
+              >
+                <h3 className="font-semibold text-foreground text-base mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{item.description}</p>
+                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-accent group-hover:underline">
+                  Попробовать →
                 </span>
-              ))}
-            </div>
+              </div>
+            ))}
           </motion.div>
         </div>
       </section>
-
-      {/* Solution */}
-      <Section title="Решение сложных задач — наша работа">
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            {
-              title: "Преобразуй замысел в ТЗ",
-              description: "Превращаем вашу идею в детальное техническое задание с чёткими требованиями, сроками и метриками",
-              onClick: () => setSpecOpen(true),
-            },
-            {
-              title: "ИИ ассистент",
-              description: "Интеллектуальный помощник для автоматизации рутинных задач, анализа данных и поддержки принятия решений",
-              onClick: () => setAiOpen(true),
-            },
-            {
-              title: "Воплоти свою идею",
-              description: "Полный цикл реализации: от прототипа до готового продукта с сопровождением и поддержкой",
-              onClick: () => setIdeaOpen(true),
-            },
-          ].map((item, i) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className={`bg-card rounded-lg border border-border p-6 card-hover ${item.onClick ? "cursor-pointer" : ""}`}
-              onClick={item.onClick}
-            >
-              <h3 className="font-semibold text-foreground text-lg mb-3">{item.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
-            </motion.div>
-          ))}
-        </div>
-      </Section>
 
       {/* Mission */}
       <Section title="Миссия" subtitle="Повышение эффективности, безопасности и управляемости городской среды, предприятий и образовательных учреждений за счёт цифровых технологий.">
