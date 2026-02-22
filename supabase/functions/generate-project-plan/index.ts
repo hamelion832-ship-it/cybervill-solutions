@@ -1,0 +1,83 @@
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { idea, industry, budget, timeline } = await req.json();
+
+    if (!idea) {
+      throw new Error("Описание идеи обязательно");
+    }
+
+    const prompt = `Ты — архитектор цифровых решений компании КИБЕРВИЛЛ. Пользователь описал свою идею проекта. Создай детальный план реализации.
+
+**Идея:** ${idea}
+**Отрасль:** ${industry || "Не указана"}
+**Бюджет:** ${budget || "Не указан"}
+**Желаемые сроки:** ${timeline || "Не указаны"}
+
+Создай план в формате Markdown со следующими разделами:
+
+## 🎯 Концепция проекта
+Краткое описание и ценность продукта.
+
+## 🏗️ Архитектура решения
+Технический стек, компоненты системы, схема взаимодействия.
+
+## 📋 Этапы реализации
+Пошаговый план с описанием каждого этапа, сроками и результатами.
+
+## 💡 Ключевые функции
+Список основных функций продукта с приоритетами (MVP / v2 / v3).
+
+## 🔧 Технологии и инструменты
+Конкретные технологии для каждого компонента.
+
+## 📊 Оценка ресурсов
+Примерная оценка команды, сроков и этапов.
+
+## 🚀 Следующие шаги
+Конкретные действия для старта проекта.
+
+Отвечай на русском языке. Будь конкретным и практичным.`;
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${Deno.env.get("LOVABLE_API_KEY")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 4000,
+      }),
+    });
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+
+    if (!content) {
+      throw new Error("No content in AI response");
+    }
+
+    return new Response(JSON.stringify({ plan: content }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+});
