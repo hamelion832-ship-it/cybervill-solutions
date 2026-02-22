@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Building2, Factory, GraduationCap, Monitor, Eye, Cog,
@@ -6,6 +7,7 @@ import {
 import heroBg from "@/assets/hero-bg.jpg";
 import Section from "@/components/Section";
 import InfoCard from "@/components/InfoCard";
+import SpecGeneratorDialog from "@/components/SpecGeneratorDialog";
 
 const products = [
   {
@@ -66,6 +68,7 @@ const team = [
 ];
 
 const Index = () => {
+  const [specOpen, setSpecOpen] = useState(false);
   return (
     <main className="pt-16">
       {/* Hero */}
@@ -109,6 +112,7 @@ const Index = () => {
             {
               title: "Преобразуй замысел в ТЗ",
               description: "Превращаем вашу идею в детальное техническое задание с чёткими требованиями, сроками и метриками",
+              onClick: () => setSpecOpen(true),
             },
             {
               title: "ИИ ассистент",
@@ -125,7 +129,8 @@ const Index = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-card rounded-lg border border-border p-6 card-hover"
+              className={`bg-card rounded-lg border border-border p-6 card-hover ${item.onClick ? "cursor-pointer" : ""}`}
+              onClick={item.onClick}
             >
               <h3 className="font-semibold text-foreground text-lg mb-3">{item.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
@@ -180,6 +185,7 @@ const Index = () => {
           ))}
         </div>
       </Section>
+      <SpecGeneratorDialog open={specOpen} onOpenChange={setSpecOpen} />
     </main>
   );
 };
