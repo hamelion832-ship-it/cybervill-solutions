@@ -102,6 +102,38 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Solution */}
+      <Section title="Решение сложных задач — наша работа">
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            {
+              title: "Преобразуй замысел в ТЗ",
+              description: "Превращаем вашу идею в детальное техническое задание с чёткими требованиями, сроками и метриками",
+            },
+            {
+              title: "ИИ ассистент",
+              description: "Интеллектуальный помощник для автоматизации рутинных задач, анализа данных и поддержки принятия решений",
+            },
+            {
+              title: "Воплоти свою идею",
+              description: "Полный цикл реализации: от прототипа до готового продукта с сопровождением и поддержкой",
+            },
+          ].map((item, i) => (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="bg-card rounded-lg border border-border p-6 card-hover"
+            >
+              <h3 className="font-semibold text-foreground text-lg mb-3">{item.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
       {/* Mission */}
       <Section title="Миссия" subtitle="Повышение эффективности, безопасности и управляемости городской среды, предприятий и образовательных учреждений за счёт цифровых технологий.">
         <div className="grid md:grid-cols-3 gap-4">
