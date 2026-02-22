@@ -109,16 +109,30 @@ const ImageGallery = ({ images, slide, setSlide }: { images: string[]; slide: nu
 
 const DemoLinks = ({ demos }: { demos: typeof EDU_DEMOS }) => (
   <div className="space-y-3">
-    {demos.map((demo) => (
-      <a key={demo.title} href={demo.url} target="_blank" rel="noopener noreferrer"
-        className="flex items-center justify-between gap-4 p-4 rounded-lg border border-border bg-card hover:bg-accent/10 transition-colors group">
-        <div>
-          <h4 className="font-medium text-foreground group-hover:text-accent transition-colors">{demo.title}</h4>
-          <p className="text-sm text-muted-foreground mt-1">{demo.description}</p>
-        </div>
-        <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-accent shrink-0" />
-      </a>
-    ))}
+    {demos.map((demo) => {
+      const isEmbeddable = demo.url.includes("lovable.dev") || demo.url.includes("lovable.app");
+      if (isEmbeddable) {
+        return (
+          <div key={demo.title} className="space-y-2">
+            <h4 className="font-medium text-foreground">{demo.title}</h4>
+            <p className="text-sm text-muted-foreground">{demo.description}</p>
+            <div className="rounded-lg overflow-hidden border border-border bg-muted">
+              <iframe src={demo.url} className="w-full" style={{ height: "70vh", minHeight: "400px" }} title={demo.title} />
+            </div>
+          </div>
+        );
+      }
+      return (
+        <a key={demo.title} href={demo.url} target="_blank" rel="noopener noreferrer"
+          className="flex items-center justify-between gap-4 p-4 rounded-lg border border-border bg-card hover:bg-accent/10 transition-colors group">
+          <div>
+            <h4 className="font-medium text-foreground group-hover:text-accent transition-colors">{demo.title}</h4>
+            <p className="text-sm text-muted-foreground mt-1">{demo.description}</p>
+          </div>
+          <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-accent shrink-0" />
+        </a>
+      );
+    })}
   </div>
 );
 
