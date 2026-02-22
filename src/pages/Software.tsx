@@ -18,7 +18,7 @@ const EDU_DEMOS = [
 
 const AGRO_DEMOS = [
   { title: "Контроль техники и ресурсов", url: "https://agro-tech-control.example.com", description: "Мониторинг и управление сельскохозяйственной техникой" },
-  { title: "Мониторинг сельхозугодий", url: "https://agro-monitor.example.com", description: "Спутниковый и наземный контроль полей" },
+  { title: "Мониторинг сельхозугодий", url: "https://lovable.dev/?preview=50ab894d-b2f3-4708-b1d2-acc63175ae85", description: "Спутниковый и наземный контроль полей" },
   { title: "Анализ почв и урожайности", url: "https://agro-analytics.example.com", description: "Аналитика данных для оптимизации урожая" },
 ];
 
