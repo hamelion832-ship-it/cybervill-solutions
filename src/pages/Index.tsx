@@ -9,6 +9,7 @@ import Section from "@/components/Section";
 import InfoCard from "@/components/InfoCard";
 import SpecGeneratorDialog from "@/components/SpecGeneratorDialog";
 import AiAssistantDialog from "@/components/AiAssistantDialog";
+import IdeaRealizationDialog from "@/components/IdeaRealizationDialog";
 
 const products = [
   {
@@ -71,6 +72,7 @@ const team = [
 const Index = () => {
   const [specOpen, setSpecOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
+  const [ideaOpen, setIdeaOpen] = useState(false);
   return (
     <main className="pt-16">
       {/* Hero */}
@@ -124,6 +126,7 @@ const Index = () => {
             {
               title: "Воплоти свою идею",
               description: "Полный цикл реализации: от прототипа до готового продукта с сопровождением и поддержкой",
+              onClick: () => setIdeaOpen(true),
             },
           ].map((item, i) => (
             <motion.div
@@ -190,6 +193,7 @@ const Index = () => {
       </Section>
       <SpecGeneratorDialog open={specOpen} onOpenChange={setSpecOpen} />
       <AiAssistantDialog open={aiOpen} onOpenChange={setAiOpen} />
+      <IdeaRealizationDialog open={ideaOpen} onOpenChange={setIdeaOpen} />
     </main>
   );
 };
