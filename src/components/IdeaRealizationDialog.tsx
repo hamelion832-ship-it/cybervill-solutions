@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import {
   Sparkles, Send, RefreshCw, Maximize, Monitor, Tablet, Smartphone,
-  Download, Mail, CalendarDays, Settings, RotateCcw, Loader2
+  Download, Mail, CalendarDays, Settings, RotateCcw, Loader2, ExternalLink
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -152,6 +152,12 @@ const IdeaRealizationDialog = ({ open, onOpenChange }: Props) => {
 
   const handleFullscreen = () => {
     iframeRef.current?.requestFullscreen?.();
+  };
+
+  const handleOpenInWeb = () => {
+    const blob = new Blob([currentCode], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
   };
 
   const iframeWidth = device === "tablet" ? "768px" : device === "mobile" ? "375px" : "100%";
@@ -311,6 +317,7 @@ const IdeaRealizationDialog = ({ open, onOpenChange }: Props) => {
                 </div>
                 <div className="flex gap-1">
                   <Button size="icon" variant="ghost" onClick={handleRefresh}><RefreshCw className="w-4 h-4" /></Button>
+                  <Button size="icon" variant="ghost" onClick={handleOpenInWeb} title="Открыть в новой вкладке"><ExternalLink className="w-4 h-4" /></Button>
                   <Button size="icon" variant="ghost" onClick={handleFullscreen}><Maximize className="w-4 h-4" /></Button>
                 </div>
               </div>
