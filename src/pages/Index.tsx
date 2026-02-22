@@ -8,6 +8,7 @@ import heroBg from "@/assets/hero-bg.jpg";
 import Section from "@/components/Section";
 import InfoCard from "@/components/InfoCard";
 import SpecGeneratorDialog from "@/components/SpecGeneratorDialog";
+import AiAssistantDialog from "@/components/AiAssistantDialog";
 
 const products = [
   {
@@ -69,6 +70,7 @@ const team = [
 
 const Index = () => {
   const [specOpen, setSpecOpen] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
   return (
     <main className="pt-16">
       {/* Hero */}
@@ -117,6 +119,7 @@ const Index = () => {
             {
               title: "ИИ ассистент",
               description: "Интеллектуальный помощник для автоматизации рутинных задач, анализа данных и поддержки принятия решений",
+              onClick: () => setAiOpen(true),
             },
             {
               title: "Воплоти свою идею",
@@ -186,6 +189,7 @@ const Index = () => {
         </div>
       </Section>
       <SpecGeneratorDialog open={specOpen} onOpenChange={setSpecOpen} />
+      <AiAssistantDialog open={aiOpen} onOpenChange={setAiOpen} />
     </main>
   );
 };
