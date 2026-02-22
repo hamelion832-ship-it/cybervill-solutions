@@ -19,7 +19,7 @@ const EDU_DEMOS = [
 const AGRO_DEMOS = [
   { title: "Контроль техники и ресурсов", url: "https://agro-tech-control.example.com", description: "Мониторинг и управление сельскохозяйственной техникой" },
   { title: "Мониторинг сельхозугодий", url: "https://lovable.dev/?preview=50ab894d-b2f3-4708-b1d2-acc63175ae85", description: "Спутниковый и наземный контроль полей" },
-  { title: "Анализ почв и урожайности", url: "https://agro-analytics.example.com", description: "Аналитика данных для оптимизации урожая" },
+  { title: "Анализ почв и урожайности", url: "https://lovable.dev/?preview=632eeae2-b2fd-41b8-84f1-f810d19e4938", description: "Аналитика данных для оптимизации урожая" },
 ];
 
 const TRANSPORT_DEMOS = [
