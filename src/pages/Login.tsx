@@ -70,12 +70,18 @@ const Login = () => {
     setError(null);
     setSuccess(null);
 
-    const { error } = await supabase.auth.signInWithOtp({ phone });
-    if (error) {
-      setError(error.message);
-    } else {
-      setOtpSent(true);
-      setSuccess("Код отправлен на ваш номер.");
+    try {
+      const res = await supabase.functions.invoke("sms-otp", {
+        body: { action: "send", phone },
+      });
+      if (res.error || !res.data?.success) {
+        setError(res.data?.error || "Ошибка отправки SMS");
+      } else {
+        setOtpSent(true);
+        setSuccess("Код отправлен на ваш номер.");
+      }
+    } catch {
+      setError("Ошибка соединения с сервером");
     }
     setLoading(false);
   };
@@ -85,11 +91,18 @@ const Login = () => {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: "sms" });
-    if (error) {
-      setError(error.message);
-    } else {
-      navigate("/");
+    try {
+      const res = await supabase.functions.invoke("sms-otp", {
+        body: { action: "verify", phone, code: otp },
+      });
+      if (res.error || !res.data?.success) {
+        setError(res.data?.error || "Ошибка проверки кода");
+      } else {
+        setSuccess("Вход выполнен!");
+        navigate("/");
+      }
+    } catch {
+      setError("Ошибка соединения с сервером");
     }
     setLoading(false);
   };
