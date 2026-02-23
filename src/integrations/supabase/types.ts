@@ -14,7 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      otp_codes: {
+        Row: {
+          code: string
+          created_at: string | null
+          expires_at: string
+          phone: string
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          expires_at: string
+          phone: string
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          expires_at?: string
+          phone?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
