@@ -9,15 +9,11 @@ const corsHeaders = {
 
 const SMSAERO_API = "https://gate.smsaero.ru/v2";
 
-// In-memory OTP store (per isolate). For production, use a database table.
-const otpStore = new Map<string, { code: string; expiresAt: number }>();
-
 function generateCode(): string {
   return String(Math.floor(100000 + Math.random() * 900000));
 }
 
 function normalizePhone(phone: string): string {
-  // SMS Aero expects phone without '+' prefix
   return phone.replace(/[^\d]/g, "");
 }
 
@@ -31,12 +27,16 @@ serve(async (req) => {
 
   if (!SMSAERO_EMAIL || !SMSAERO_API_KEY) {
     return new Response(
-      JSON.stringify({ success: false, error: "SMS Aero credentials not configured" }),
+      JSON.stringify({ success: false, error: "SMS credentials not configured" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
-  // Basic Auth header for SMS Aero
+  const supabaseAdmin = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+  );
+
   const authHeader = "Basic " + btoa(`${SMSAERO_EMAIL}:${SMSAERO_API_KEY}`);
 
   try {
@@ -52,9 +52,17 @@ serve(async (req) => {
 
     if (action === "send") {
       const otpCode = generateCode();
-      otpStore.set(normalizedPhone, {
+
+      // Clean up expired codes, then upsert new one
+      await supabaseAdmin
+        .from("otp_codes")
+        .delete()
+        .lt("expires_at", new Date().toISOString());
+
+      await supabaseAdmin.from("otp_codes").upsert({
+        phone: normalizedPhone,
         code: otpCode,
-        expiresAt: Date.now() + 5 * 60 * 1000,
+        expires_at: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
       });
 
       const params = new URLSearchParams({
@@ -77,7 +85,7 @@ serve(async (req) => {
       if (!smsData.success) {
         console.error("SMS Aero error:", JSON.stringify(smsData));
         return new Response(
-          JSON.stringify({ success: false, error: smsData.message || "Ошибка отправки SMS. Проверьте номер." }),
+          JSON.stringify({ success: false, error: "Ошибка отправки SMS. Проверьте номер." }),
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -89,7 +97,11 @@ serve(async (req) => {
     }
 
     if (action === "verify") {
-      const stored = otpStore.get(normalizedPhone);
+      const { data: stored } = await supabaseAdmin
+        .from("otp_codes")
+        .select("code, expires_at")
+        .eq("phone", normalizedPhone)
+        .single();
 
       if (!stored) {
         return new Response(
@@ -98,8 +110,8 @@ serve(async (req) => {
         );
       }
 
-      if (Date.now() > stored.expiresAt) {
-        otpStore.delete(normalizedPhone);
+      if (new Date() > new Date(stored.expires_at)) {
+        await supabaseAdmin.from("otp_codes").delete().eq("phone", normalizedPhone);
         return new Response(
           JSON.stringify({ success: false, error: "Код истёк. Запросите новый." }),
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -113,15 +125,13 @@ serve(async (req) => {
         );
       }
 
-      otpStore.delete(normalizedPhone);
-
-      const supabaseAdmin = createClient(
-        Deno.env.get("SUPABASE_URL")!,
-        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-      );
+      // OTP verified — delete it
+      await supabaseAdmin.from("otp_codes").delete().eq("phone", normalizedPhone);
 
       const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
-      let user = existingUsers?.users?.find((u) => u.phone === normalizedPhone || u.phone === `+${normalizedPhone}`);
+      let user = existingUsers?.users?.find(
+        (u) => u.phone === normalizedPhone || u.phone === `+${normalizedPhone}`
+      );
 
       if (!user) {
         const { data: newUser, error: createErr } = await supabaseAdmin.auth.admin.createUser({
