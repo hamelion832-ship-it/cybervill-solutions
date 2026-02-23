@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogIn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
@@ -43,6 +43,11 @@ const Header = () => {
             </Link>
           ))}
         </nav>
+
+        <Link to="/login" className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded bg-accent text-accent-foreground text-sm font-medium hover:bg-accent/90 transition-colors">
+          <LogIn className="w-4 h-4" />
+          Вход
+        </Link>
 
         {/* Mobile toggle */}
         <button
