@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { path: "/", label: "О компании" },
-  { path: "/software", label: "ПО / САПР" },
+  { path: "/software", label: "ПО / САПР ознакомиться" },
   { path: "/portfolio", label: "Портфолио" },
   { path: "/products", label: "Товары и решения" },
   { path: "/contacts", label: "Контакты" },

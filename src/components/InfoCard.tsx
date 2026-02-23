@@ -31,6 +31,11 @@ const InfoCard = ({ icon: Icon, title, items, index = 0, onClick }: InfoCardProp
         </li>
       ))}
     </ul>
+    {onClick && (
+      <button className="mt-4 w-full py-2 px-4 rounded-md bg-accent/10 text-accent text-sm font-medium hover:bg-accent/20 transition-colors">
+        Ознакомиться
+      </button>
+    )}
   </motion.div>
 );
 
