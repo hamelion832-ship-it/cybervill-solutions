@@ -150,3 +150,18 @@ export const phpAiChat = {
     return data.content;
   },
 };
+
+// --- LocalAI Chat API ---
+
+export const phpLocalAiChat = {
+  async send(messages: AiChatMessage[]): Promise<string> {
+    const res = await fetch(`${API_BASE_URL}/ai-chat-local.php`, {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ messages }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Ошибка LocalAI-чата");
+    return data.content;
+  },
+};

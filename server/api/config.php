@@ -16,6 +16,11 @@ define('ALLOWED_ORIGIN', '*'); // В продакшене замените на 
 define('OPENAI_API_KEY', 'sk-YOUR_OPENAI_API_KEY'); // Замените на ваш ключ OpenAI
 define('OPENAI_MODEL', 'gpt-4o-mini');               // Можно заменить на gpt-4o, gpt-3.5-turbo и т.д.
 
+// LocalAI (self-hosted) — укажите адрес вашего LocalAI сервера
+define('LOCALAI_URL', 'http://localhost:8080');        // URL сервера LocalAI
+define('LOCALAI_MODEL', 'gpt-3.5-turbo');              // Имя модели в LocalAI (зависит от загруженной модели)
+define('LOCALAI_API_KEY', '');                          // Опционально: API-ключ, если настроен в LocalAI
+
 function getDB(): PDO {
     static $pdo = null;
     if ($pdo === null) {
