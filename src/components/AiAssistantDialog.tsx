@@ -55,7 +55,15 @@ const AiAssistantDialog = ({ open, onOpenChange }: AiAssistantDialogProps) => {
         body: { messages: updated },
       });
       if (error) throw error;
-      setMessages([...updated, { role: "assistant", content: data.content }]);
+      const assistantContent = data.content;
+      setMessages([...updated, { role: "assistant", content: assistantContent }]);
+
+      // Save to chat history
+      supabase.from("chat_history").insert({
+        user_id: session!.user.id,
+        user_message: text,
+        assistant_message: assistantContent,
+      }).then(() => {});
     } catch (e: any) {
       setMessages([
         ...updated,

@@ -12,6 +12,7 @@ import Products from "./pages/Products";
 import Contacts from "./pages/Contacts";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import Cabinet from "./pages/Cabinet";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/products" element={<Products />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/cabinet" element={<Cabinet />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
