@@ -9,7 +9,6 @@ import Section from "@/components/Section";
 import InfoCard from "@/components/InfoCard";
 import SpecGeneratorDialog from "@/components/SpecGeneratorDialog";
 import AiAssistantDialog from "@/components/AiAssistantDialog";
-import LocalAiAssistantDialog from "@/components/LocalAiAssistantDialog";
 import IdeaRealizationDialog from "@/components/IdeaRealizationDialog";
 
 const products = [
@@ -68,7 +67,6 @@ const team = [
 const Index = () => {
   const [specOpen, setSpecOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
-  const [localAiOpen, setLocalAiOpen] = useState(false);
   const [ideaOpen, setIdeaOpen] = useState(false);
   return (
     <main className="pt-16">
@@ -102,7 +100,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto"
+            className="mt-12 grid md:grid-cols-3 gap-5 max-w-4xl mx-auto"
           >
             {[
               {
@@ -112,39 +110,30 @@ const Index = () => {
               },
               {
                 title: "ИИ ассистент",
-                description: "Интеллектуальный помощник на базе облачного ИИ для анализа данных и поддержки решений",
+                description: "Интеллектуальный помощник для автоматизации рутинных задач, анализа данных и поддержки принятия решений",
                 onClick: () => setAiOpen(true),
-              },
-              {
-                title: "LocalAI ассистент",
-                description: "Приватный ИИ на вашем сервере — полная независимость и контроль над данными",
-                onClick: () => setLocalAiOpen(true),
-                isLocalAi: true,
               },
               {
                 title: "Интеллектуальная собственность",
                 description: "Свидетельства о регистрации ПО и включение в Реестр отечественного софта Минцифры",
                 onClick: () => window.location.href = "/ip",
               },
-            ].map((item) => {
+            ].map((item, i) => {
               const isAi = item.title === "ИИ ассистент";
-              const isLocalAi = 'isLocalAi' in item && item.isLocalAi;
               return (
                 <div
                   key={item.title}
                   className={`backdrop-blur-md rounded-lg p-5 text-left cursor-pointer card-hover group ${
                     isAi
                       ? "bg-accent/15 border-2 border-accent ring-4 ring-accent/40 shadow-[0_0_40px_-4px_hsl(var(--accent)/0.6)] scale-[1.03]"
-                      : isLocalAi
-                      ? "bg-green-500/10 border-2 border-green-500/50 ring-2 ring-green-500/20"
                       : "bg-card/80 border border-accent/20"
                   }`}
                   onClick={item.onClick}
                 >
-                  <h3 className={`font-semibold text-base mb-2 ${isAi || isLocalAi ? "text-primary-foreground" : "text-foreground"}`}>{item.title}</h3>
-                  <p className={`text-sm leading-relaxed mb-4 ${isAi || isLocalAi ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{item.description}</p>
+                  <h3 className={`font-semibold text-base mb-2 ${isAi ? "text-primary-foreground" : "text-foreground"}`}>{item.title}</h3>
+                  <p className={`text-sm leading-relaxed mb-4 ${isAi ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{item.description}</p>
                   <span className={`inline-flex items-center gap-1.5 text-sm font-medium group-hover:underline ${
-                    isAi ? "text-accent font-bold" : isLocalAi ? "text-green-400 font-bold" : "text-accent"
+                    isAi ? "text-accent font-bold" : "text-accent"
                   }`}>
                     Попробовать →
                   </span>
@@ -203,7 +192,6 @@ const Index = () => {
       </Section>
       <SpecGeneratorDialog open={specOpen} onOpenChange={setSpecOpen} />
       <AiAssistantDialog open={aiOpen} onOpenChange={setAiOpen} />
-      <LocalAiAssistantDialog open={localAiOpen} onOpenChange={setLocalAiOpen} />
       <IdeaRealizationDialog open={ideaOpen} onOpenChange={setIdeaOpen} />
     </main>
   );
