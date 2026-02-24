@@ -98,6 +98,13 @@ const Login = () => {
       if (res.error || !res.data?.success) {
         setError(res.data?.error || "Ошибка проверки кода");
       } else {
+        // Set the authenticated session with returned tokens
+        if (res.data.session) {
+          await supabase.auth.setSession({
+            access_token: res.data.session.access_token,
+            refresh_token: res.data.session.refresh_token,
+          });
+        }
         setSuccess("Вход выполнен!");
         navigate("/");
       }

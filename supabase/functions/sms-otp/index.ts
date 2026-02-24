@@ -137,6 +137,8 @@ serve(async (req) => {
         const { data: newUser, error: createErr } = await supabaseAdmin.auth.admin.createUser({
           phone: normalizedPhone,
           phone_confirm: true,
+          email: `phone_${normalizedPhone}@placeholder.local`,
+          email_confirm: true,
         });
         if (createErr) {
           console.error("Create user error:", createErr);
@@ -148,12 +150,48 @@ serve(async (req) => {
         user = newUser.user;
       }
 
+      // Generate a proper authenticated session for the user
+      const { data: sessionData, error: sessionError } =
+        await supabaseAdmin.auth.admin.generateLink({
+          type: "magiclink",
+          email: user.email!,
+        });
+
+      if (sessionError || !sessionData) {
+        console.error("Session generation error:", sessionError);
+        return new Response(
+          JSON.stringify({ success: false, error: "Ошибка создания сессии" }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      // Extract the token from the generated link and exchange it for a session
+      const linkUrl = new URL(sessionData.properties.action_link);
+      const tokenHash = linkUrl.searchParams.get("token") ||
+        linkUrl.hash.replace("#", "").split("&").find((p) => p.startsWith("token="))?.split("=")[1];
+
+      // Use verifyOtp to exchange the token for access/refresh tokens
+      const { data: verifyData, error: verifyError } = await supabaseAdmin.auth.verifyOtp({
+        token_hash: sessionData.properties.hashed_token,
+        type: "magiclink",
+      });
+
+      if (verifyError || !verifyData.session) {
+        console.error("Token exchange error:", verifyError);
+        return new Response(
+          JSON.stringify({ success: false, error: "Ошибка создания сессии" }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
       return new Response(
         JSON.stringify({
           success: true,
           message: "Код подтверждён",
-          user_id: user.id,
-          verified: true,
+          session: {
+            access_token: verifyData.session.access_token,
+            refresh_token: verifyData.session.refresh_token,
+          },
         }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
