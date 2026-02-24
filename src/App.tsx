@@ -13,6 +13,8 @@ import Contacts from "./pages/Contacts";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Cabinet from "./pages/Cabinet";
+import RnD from "./pages/RnD";
+import IntellectualProperty from "./pages/IntellectualProperty";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +27,8 @@ const App = () => (
         <Header />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/rnd" element={<RnD />} />
+          <Route path="/ip" element={<IntellectualProperty />} />
           <Route path="/software" element={<Software />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/products" element={<Products />} />

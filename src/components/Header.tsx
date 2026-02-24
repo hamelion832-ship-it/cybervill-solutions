@@ -13,7 +13,9 @@ import {
 
 const navItems = [
   { path: "/", label: "О компании" },
-  { path: "/software", label: "ПО / САПР ознакомиться" },
+  { path: "/rnd", label: "R&D" },
+  { path: "/ip", label: "Интеллектуальная собственность" },
+  { path: "/software", label: "ПО / САПР" },
   { path: "/portfolio", label: "Портфолио" },
   { path: "/products", label: "Товары и решения" },
   { path: "/contacts", label: "Контакты" },
