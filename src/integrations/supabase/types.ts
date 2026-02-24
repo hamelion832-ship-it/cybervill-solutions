@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      chat_history: {
+        Row: {
+          assistant_message: string
+          created_at: string
+          id: string
+          user_id: string
+          user_message: string
+        }
+        Insert: {
+          assistant_message: string
+          created_at?: string
+          id?: string
+          user_id: string
+          user_message: string
+        }
+        Update: {
+          assistant_message?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+          user_message?: string
+        }
+        Relationships: []
+      }
       otp_codes: {
         Row: {
           code: string
