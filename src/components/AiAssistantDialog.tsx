@@ -2,8 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Bot, Send, Loader2, User } from "lucide-react";
+import { Bot, Send, Loader2, User, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import type { Session } from "@supabase/supabase-js";
 import ReactMarkdown from "react-markdown";
 
 interface Message {
@@ -20,7 +22,17 @@ const AiAssistantDialog = ({ open, onOpenChange }: AiAssistantDialogProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -82,6 +94,16 @@ const AiAssistantDialog = ({ open, onOpenChange }: AiAssistantDialogProps) => {
           </DialogDescription>
         </DialogHeader>
 
+        {!session ? (
+          <div className="flex-1 flex flex-col items-center justify-center text-center text-muted-foreground gap-4 px-6 py-4">
+            <LogIn className="w-12 h-12 opacity-30" />
+            <p className="text-sm">Для использования ИИ-ассистента необходимо войти в аккаунт</p>
+            <Button onClick={() => { handleClose(false); navigate("/login"); }}>
+              Войти
+            </Button>
+          </div>
+        ) : (
+        <>
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground gap-3">
@@ -167,6 +189,8 @@ const AiAssistantDialog = ({ open, onOpenChange }: AiAssistantDialogProps) => {
             </Button>
           </div>
         </div>
+        </>
+        )}
       </DialogContent>
     </Dialog>
   );
