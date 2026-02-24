@@ -118,19 +118,28 @@ const Index = () => {
                 description: "Свидетельства о регистрации ПО и включение в Реестр отечественного софта Минцифры",
                 onClick: () => window.location.href = "/ip",
               },
-            ].map((item, i) => (
-              <div
-                key={item.title}
-                className="bg-card/80 backdrop-blur-md rounded-lg border border-accent/20 p-5 text-left cursor-pointer card-hover group"
-                onClick={item.onClick}
-              >
-                <h3 className="font-semibold text-foreground text-base mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{item.description}</p>
-                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-accent group-hover:underline">
-                  Попробовать →
-                </span>
-              </div>
-            ))}
+            ].map((item, i) => {
+              const isAi = item.title === "ИИ ассистент";
+              return (
+                <div
+                  key={item.title}
+                  className={`bg-card/80 backdrop-blur-md rounded-lg p-5 text-left cursor-pointer card-hover group ${
+                    isAi
+                      ? "border-2 border-accent ring-2 ring-accent/30 shadow-[0_0_24px_-4px_hsl(var(--accent)/0.4)]"
+                      : "border border-accent/20"
+                  }`}
+                  onClick={item.onClick}
+                >
+                  <h3 className="font-semibold text-foreground text-base mb-2">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">{item.description}</p>
+                  <span className={`inline-flex items-center gap-1.5 text-sm font-medium group-hover:underline ${
+                    isAi ? "text-accent font-bold" : "text-accent"
+                  }`}>
+                    Попробовать →
+                  </span>
+                </div>
+              );
+            })}
           </motion.div>
         </div>
       </section>
