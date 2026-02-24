@@ -130,3 +130,23 @@ export const phpChatHistory = {
     });
   },
 };
+
+// --- AI Chat API ---
+
+export interface AiChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export const phpAiChat = {
+  async send(messages: AiChatMessage[]): Promise<string> {
+    const res = await fetch(`${API_BASE_URL}/ai-chat.php`, {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ messages }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Ошибка ИИ-чата");
+    return data.content;
+  },
+};
