@@ -14,7 +14,22 @@ function generateCode(): string {
 }
 
 function normalizePhone(phone: string): string {
-  return phone.replace(/[^\d]/g, "");
+  const digits = phone.replace(/[^\d]/g, "");
+  if (!digits) return "";
+
+  // Приводим к формату РФ: 7XXXXXXXXXX
+  if (digits.length === 11 && digits.startsWith("8")) {
+    return `7${digits.slice(1)}`;
+  }
+  if (digits.length === 10) {
+    return `7${digits}`;
+  }
+
+  return digits;
+}
+
+function isValidRuPhone(phone: string): boolean {
+  return /^7\d{10}$/.test(phone);
 }
 
 serve(async (req) => {
@@ -46,7 +61,17 @@ serve(async (req) => {
     if (!normalizedPhone) {
       return new Response(
         JSON.stringify({ success: false, error: "Номер телефона обязателен" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!isValidRuPhone(normalizedPhone)) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Введите номер в формате +7XXXXXXXXXX",
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -84,9 +109,18 @@ serve(async (req) => {
 
       if (!smsData.success) {
         console.error("SMS Aero error:", JSON.stringify(smsData));
+
+        const providerMessage = String(smsData?.message || "");
+        const isInvalidCreds = providerMessage.toLowerCase().includes("invalid credentials");
+
         return new Response(
-          JSON.stringify({ success: false, error: "Ошибка отправки SMS. Проверьте номер." }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          JSON.stringify({
+            success: false,
+            error: isInvalidCreds
+              ? "Ошибка настроек SMS-сервиса: проверьте логин (user) и API-ключ"
+              : providerMessage || "Ошибка отправки SMS. Проверьте номер.",
+          }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
