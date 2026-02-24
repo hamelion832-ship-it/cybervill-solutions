@@ -123,10 +123,10 @@ const Index = () => {
               return (
                 <div
                   key={item.title}
-                  className={`bg-card/80 backdrop-blur-md rounded-lg p-5 text-left cursor-pointer card-hover group ${
+                  className={`backdrop-blur-md rounded-lg p-5 text-left cursor-pointer card-hover group ${
                     isAi
-                      ? "border-2 border-accent ring-2 ring-accent/30 shadow-[0_0_24px_-4px_hsl(var(--accent)/0.4)]"
-                      : "border border-accent/20"
+                      ? "bg-accent/15 border-2 border-accent ring-4 ring-accent/40 shadow-[0_0_40px_-4px_hsl(var(--accent)/0.6)] scale-[1.03]"
+                      : "bg-card/80 border border-accent/20"
                   }`}
                   onClick={item.onClick}
                 >
