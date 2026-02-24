@@ -130,8 +130,8 @@ const Index = () => {
                   }`}
                   onClick={item.onClick}
                 >
-                  <h3 className="font-semibold text-foreground text-base mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">{item.description}</p>
+                  <h3 className={`font-semibold text-base mb-2 ${isAi ? "text-primary-foreground" : "text-foreground"}`}>{item.title}</h3>
+                  <p className={`text-sm leading-relaxed mb-4 ${isAi ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{item.description}</p>
                   <span className={`inline-flex items-center gap-1.5 text-sm font-medium group-hover:underline ${
                     isAi ? "text-accent font-bold" : "text-accent"
                   }`}>
