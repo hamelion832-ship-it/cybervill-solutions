@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogIn, Mail, Phone } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Mail, Phone } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,17 +22,8 @@ const Login = () => {
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
 
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    setError(null);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result?.error) {
-      setError("Ошибка входа. Попробуйте снова.");
-    }
-    setLoading(false);
-  };
+
+
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,16 +114,8 @@ const Login = () => {
         {error && <p className="text-sm text-destructive text-center">{error}</p>}
         {success && <p className="text-sm text-accent text-center">{success}</p>}
 
-        <Button onClick={handleGoogleSignIn} disabled={loading} variant="outline" className="w-full gap-2" size="lg">
-          <LogIn className="w-4 h-4" />
-          Войти через Google
-        </Button>
 
-        <div className="flex items-center gap-3">
-          <Separator className="flex-1" />
-          <span className="text-xs text-muted-foreground">или</span>
-          <Separator className="flex-1" />
-        </div>
+
 
         <Tabs defaultValue="email" className="w-full">
           <TabsList className="w-full">
