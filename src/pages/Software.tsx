@@ -17,7 +17,7 @@ const EDU_DEMOS = [
 ];
 
 const AGRO_DEMOS = [
-  { title: "Контроль техники и ресурсов", url: "https://agro-tech-control.example.com", description: "Мониторинг и управление сельскохозяйственной техникой" },
+  { title: "Контроль техники и ресурсов", url: "https://ilogex-agri-net.lovable.app/dashboard", description: "Мониторинг и управление сельскохозяйственной техникой" },
   { title: "Мониторинг сельхозугодий", url: "https://agro-sense-net.lovable.app", description: "Спутниковый и наземный контроль полей" },
   { title: "Анализ почв и урожайности", url: "https://field-whisperer-75.lovable.app", description: "Аналитика данных для оптимизации урожая" },
 ];
