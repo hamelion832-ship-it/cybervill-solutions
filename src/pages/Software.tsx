@@ -123,7 +123,7 @@ const DemoLinks = ({ demos }: { demos: typeof EDU_DEMOS }) => (
         );
       }
       return (
-        <a key={demo.title} href={demo.url} target="_blank" rel="noopener noreferrer"
+        <a key={demo.title} href={demo.url}
           className="flex items-center justify-between gap-4 p-4 rounded-lg border border-border bg-card hover:bg-accent/10 transition-colors group">
           <div>
             <h4 className="font-medium text-foreground group-hover:text-accent transition-colors">{demo.title}</h4>
