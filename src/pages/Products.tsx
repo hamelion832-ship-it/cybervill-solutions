@@ -12,7 +12,7 @@ type ModalType = "radio" | "monitoring" | "drones" | "interactive" | "pools" | n
 const PHOTOS: Record<Exclude<ModalType, null>, string[]> = {
   radio: Array.from({ length: 6 }, (_, i) => `/materials/products/radio/photo-${i + 1}.jpg`),
   monitoring: Array.from({ length: 10 }, (_, i) => `/materials/products/monitoring/photo-${i + 1}.jpg`),
-  drones: Array.from({ length: 10 }, (_, i) => `/materials/products/drones/photo-${i + 1}.jpg`),
+  drones: Array.from({ length: 6 }, (_, i) => `/materials/products/drones/photo-${i + 1}.jpg`),
   interactive: Array.from({ length: 8 }, (_, i) => `/materials/products/interactive/photo-${i + 1}.jpg`),
   pools: Array.from({ length: 5 }, (_, i) => `/materials/products/pools/photo-${i + 1}.jpg`),
 };
