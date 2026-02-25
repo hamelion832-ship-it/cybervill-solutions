@@ -23,7 +23,7 @@ const AGRO_DEMOS = [
 ];
 
 const TRANSPORT_DEMOS = [
-  { title: "Мониторинг транспорта", url: "https://transport-monitor.example.com", description: "Отслеживание транспорта и техники в реальном времени" },
+  { title: "Мониторинг транспорта", url: "https://fleet-fmea-pilot.lovable.app/", description: "Отслеживание транспорта и техники в реальном времени" },
 ];
 
 type ModalType = "payment" | "cnc" | "education" | "monitoring" | "agro" | "transport" | null;
