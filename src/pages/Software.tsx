@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const CNC_PHOTOS = Array.from({ length: 10 }, (_, i) => `/materials/cnc/photo-${i + 1}.jpg`);
+const CNC_PHOTOS = Array.from({ length: 9 }, (_, i) => `/materials/cnc/photo-${i + 1}.jpg`);
 
 const EDU_DEMOS = [
   { title: "Дистанционная образовательная платформа", url: "https://med-tactics-pro.lovable.app/tests", description: "Онлайн-обучение, тестирование и управление учебным процессом" },
