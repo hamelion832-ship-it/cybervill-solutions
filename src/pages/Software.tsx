@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const CNC_PHOTOS = Array.from({ length: 9 }, (_, i) => `/materials/cnc/photo-${i + 1}.jpg`);
+const PAYMENT_PHOTOS = Array.from({ length: 2 }, (_, i) => `/materials/payment/photo-${i + 1}.jpg`);
 
 const EDU_DEMOS = [
   { title: "Дистанционная образовательная платформа", url: "https://med-tactics-pro.lovable.app/tests", description: "Онлайн-обучение, тестирование и управление учебным процессом" },
@@ -225,6 +226,20 @@ const Software = () => {
           </TabsList>
           <TabsContent value="pdf"><PdfViewer src={pdfPath} /></TabsContent>
           <TabsContent value="demos"><DemoLinks demos={demos} /></TabsContent>
+        </Tabs>
+      );
+    }
+
+    // Payment: PDF + photo gallery
+    if (activeModal === "payment") {
+      return (
+        <Tabs defaultValue="pdf" className="px-6 pb-6">
+          <TabsList className="mb-4">
+            <TabsTrigger value="pdf">Презентация</TabsTrigger>
+            <TabsTrigger value="photos">Фото</TabsTrigger>
+          </TabsList>
+          <TabsContent value="pdf"><PdfViewer src={pdfPath!} /></TabsContent>
+          <TabsContent value="photos"><ImageGallery images={PAYMENT_PHOTOS} slide={slide} setSlide={setSlide} /></TabsContent>
         </Tabs>
       );
     }
