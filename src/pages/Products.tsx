@@ -14,7 +14,7 @@ const PHOTOS: Record<Exclude<ModalType, null>, string[]> = {
   monitoring: Array.from({ length: 10 }, (_, i) => `/materials/products/monitoring/photo-${i + 1}.jpg`),
   drones: Array.from({ length: 10 }, (_, i) => `/materials/products/drones/photo-${i + 1}.jpg`),
   interactive: Array.from({ length: 8 }, (_, i) => `/materials/products/interactive/photo-${i + 1}.jpg`),
-  pools: Array.from({ length: 10 }, (_, i) => `/materials/products/pools/photo-${i + 1}.jpg`),
+  pools: Array.from({ length: 5 }, (_, i) => `/materials/products/pools/photo-${i + 1}.jpg`),
 };
 
 const MODAL_INFO: Record<Exclude<ModalType, null>, { title: string; description: string; folder: string }> = {
