@@ -35,6 +35,15 @@ const PDF_PATHS: Partial<Record<Exclude<ModalType, null>, string>> = {
   agro: "/materials/agro/presentation.pdf",
 };
 
+const MONITORING_DOCS = [
+  { title: "Презентация мониторинга", src: "/materials/monitoring/presentation.pdf" },
+  { title: "Коммерческая презентация", src: "/materials/monitoring/commercial-presentation.pdf" },
+  { title: "Мультиплатформенный комплекс Ilogex", src: "/materials/monitoring/ilogex-complex.pdf" },
+  { title: "Контроль и учёт оборота ТБО и металлома", src: "/materials/monitoring/tbo-metallom.pdf" },
+  { title: "Контроль и учёт оборота ТБО и металлома (доп.)", src: "/materials/monitoring/tbo-metallom-1.pdf" },
+  { title: "Мониторинг (PPTX)", src: "/materials/monitoring/monitoring.pptx" },
+];
+
 const MODAL_INFO: Record<Exclude<ModalType, null>, { title: string; description: string }> = {
   payment: { title: "Платёжные платформы — БриксПей", description: "Блокчейн-платёжная система для цифровых и фиатных операций" },
   cnc: { title: "Станки и цифровое производство", description: "CAD/CAM интеграции и автоматизация станочного оборудования" },
@@ -139,9 +148,21 @@ const DemoLinks = ({ demos }: { demos: typeof EDU_DEMOS }) => (
 const PdfViewer = ({ src }: { src: string }) => (
   <div className="rounded-lg overflow-hidden border border-border bg-muted">
     <iframe src={src} className="w-full" style={{ height: "70vh", minHeight: "400px" }} title="PDF документ" />
-    <p className="text-xs text-muted-foreground p-3">
-      Разместите PDF-файл по пути <code>{src}</code> на сервере. Если PDF не отображается, <a href={src} target="_blank" rel="noopener noreferrer" className="underline text-accent">скачайте файл</a>.
-    </p>
+  </div>
+);
+
+const DocList = ({ docs }: { docs: typeof MONITORING_DOCS }) => (
+  <div className="space-y-3">
+    {docs.map((doc) => (
+      <a key={doc.src} href={doc.src} target="_blank" rel="noopener noreferrer"
+        className="flex items-center justify-between gap-4 p-4 rounded-lg border border-border bg-card hover:bg-accent/10 transition-colors group">
+        <div>
+          <h4 className="font-medium text-foreground group-hover:text-accent transition-colors">{doc.title}</h4>
+          <p className="text-xs text-muted-foreground mt-1">{doc.src.endsWith('.pptx') ? 'PowerPoint' : 'PDF'}</p>
+        </div>
+        <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-accent shrink-0" />
+      </a>
+    ))}
   </div>
 );
 
@@ -177,6 +198,20 @@ const Software = () => {
         <div className="px-6 pb-6">
           <DemoLinks demos={TRANSPORT_DEMOS} />
         </div>
+      );
+    }
+
+    // Monitoring: PDF preview + all documents
+    if (activeModal === "monitoring") {
+      return (
+        <Tabs defaultValue="pdf" className="px-6 pb-6">
+          <TabsList className="mb-4">
+            <TabsTrigger value="pdf">Презентация</TabsTrigger>
+            <TabsTrigger value="docs">Все документы</TabsTrigger>
+          </TabsList>
+          <TabsContent value="pdf"><PdfViewer src={pdfPath!} /></TabsContent>
+          <TabsContent value="docs"><DocList docs={MONITORING_DOCS} /></TabsContent>
+        </Tabs>
       );
     }
 
